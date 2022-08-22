@@ -6,6 +6,7 @@ import {
 } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { Task } from './task.schema';
+import { ParseObjectIdPipe } from '../shared/parse-objectid.pipe';
 import { CreateTaskDto } from './create-task.dto';
 
 @ApiTags('tasks')
@@ -17,7 +18,7 @@ export class TaskController {
     @ApiOperation({ summary: 'Get specific task' })
     @ApiResponse({ status: 200, description: 'Task object' })
     @ApiResponse({ status: 400, description: 'Validation failed' })
-    async getTask(@Param('id') id: string): Promise<Task> {
+    async getTask(@Param('id', ParseObjectIdPipe) id: string): Promise<Task> {
         return this.taskService.find(id);
     }
 
@@ -42,7 +43,7 @@ export class TaskController {
     @ApiResponse({ status: 200, description: 'Task successfully updated' })
     @ApiResponse({ status: 400, description: 'Validation failed' })
     async updateTask(@Body() createTaskDto: CreateTaskDto,
-                     @Param('id') id: string): Promise<Task> {
+                     @Param('id', ParseObjectIdPipe) id: string): Promise<Task> {
         return this.taskService.update(createTaskDto, id);
     }
 
@@ -50,7 +51,7 @@ export class TaskController {
     @ApiOperation({ summary: 'Delete task' })
     @ApiResponse({ status: 200, description: 'Task successfully deleted' })
     @ApiResponse({ status: 400, description: 'Validation failed' })
-    async deleteTask(@Param('id') id: string): Promise<Task> {
+    async deleteTask(@Param('id', ParseObjectIdPipe) id: string): Promise<Task> {
         return this.taskService.delete(id);
     }
 }
